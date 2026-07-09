@@ -20,7 +20,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = ["allauth", "allauth.account"]
 
-LOCAL_APPS = ["apps.users"]
+LOCAL_APPS = ["apps.main"]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
