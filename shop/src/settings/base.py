@@ -20,7 +20,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = ["allauth", "allauth.account"]
 
-LOCAL_APPS = ["apps.users"]
+LOCAL_APPS = ["apps.main"]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -39,6 +39,14 @@ MIDDLEWARE = [
 ROOT_URLCONF = "src.urls"
 
 TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "environment": "src.jinja2.environment",
+        },
+    },
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
