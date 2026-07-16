@@ -15,12 +15,11 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
 ]
 
-THIRD_PARTY_APPS = ["allauth", "allauth.account"]
+THIRD_PARTY_APPS = []
 
-LOCAL_APPS = ["apps.main"]
+LOCAL_APPS = ["apps.main", "apps.users"]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -32,8 +31,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # что это ?
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "src.urls"
@@ -103,14 +100,18 @@ STATIC_URL = config("STATIC_URL")
 MEDIA_URL = config("MEDIA_URL")
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Allauth
 
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+LOGIN_URL = "users:login"
+LOGIN_REDIRECT_URL = "users:profile"
+LOGOUT_REDIRECT_URL = "users:login"
+
+AUTH_USER_MODEL = "users.User"
 
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]

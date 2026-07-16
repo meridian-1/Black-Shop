@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Black Shop - Login{% endblock title %}
+
+
+{% block content %}
+    <div class="login-container d-flex justify-content-center">
+        <div class="login d-flex flex-column">
+            <h3 class="text-center mt-5 mb-5">Login</h3>
+
+            <form method="post" class="loginform">
+                {{ csrf_input }}
+                    
+                {% if form.non_field_errors() %}
+                    <div class="alert alert-danger">                        
+                        {% for error in form.non_field_errors() %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        
+                        {% if field.errors %}
+                            <div class="text-danger small">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>    
+                {% endfor %}
+                    
+                <div class="loginbtns d-flex justify-content-between align-items-center">
+                    <button type="submit" class="default-btn mt-2">Login</button>
+                    <a href="{{ url('users:register') }}" class="create-account-btn default-btn mt-2">No account?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+    
