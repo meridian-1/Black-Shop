@@ -1,0 +1,28 @@
+<div class="card-container d-flex flex-wrap">
+    {% for item in clothing_items %}
+        <div class="card">
+            <a href="{{ url('main:clothing_item_detail', item.slug) }}" class="card-on-catalog">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-image"/>
+                {% else %}
+                    <img src="{{ static('img/no-image.jpg') }}" alt="{{ item.name }}" class="product-image"/>
+                {% endif %}
+                <div class="card-info">
+                <h5>{{ item.name }}</h5>
+                {% if item.discount %}
+                <div class="cart-discount d-flex gap-2">
+                    <p class="line price-on-card">${{ item.price }}</p>
+                    <p class="price">
+                        ${{ '%.2f' | format(item.get_price_with_discount()) }}
+                    </p>
+                </div>
+                    {% else %}
+                        <p class="detail-price">${{ item.price }}</p>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% else %}
+        <p>No products.</p>
+    {% endfor %}
+</div>
