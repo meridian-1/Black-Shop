@@ -100,7 +100,6 @@ class ClothingItemSize(models.Model):
     quantity = models.PositiveIntegerField(default=0)
 
     class Meta:
-        unique_together = ("clothing_item", "size")
         constraints = [
             models.UniqueConstraint(
                 fields=["clothing_item", "size"], name="unique_clothingitem_size"
