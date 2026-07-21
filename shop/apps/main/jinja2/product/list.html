@@ -96,6 +96,12 @@
             alt="{{ item.name }}"
             class="product-image"
           />
+          {% else %}
+          <img
+            src="{{ static('img/no-image.jpg') }}"
+            alt="{{ item.name }}"
+            class="product-image"
+          />
           {% endif %}
           <div class="card-info">
             <h5>{{ item.name }}</h5>
