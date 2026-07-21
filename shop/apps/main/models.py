@@ -1,7 +1,6 @@
 from decimal import Decimal
 
 from django.db import models
-from django.urls import reverse
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -34,7 +33,6 @@ class Category(models.Model):
 
     class Meta:
         ordering = ["name"]
-        indexes = [models.Index(fields=["name"])]
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 
@@ -43,7 +41,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name, allow_unicode=True)
         super().save(*args, **kwargs)
 
 
@@ -72,7 +70,7 @@ class ClothingItem(TimeStampedModel):
         ordering = [
             "-created_at",
         ]
-        indexes = [models.Index(fields=["price"]), models.Index(fields=["slug"])]
+        indexes = [models.Index(fields=["price"])]
         constraints = [
             models.CheckConstraint(
                 condition=(models.Q(discount__gte=0) & models.Q(discount__lte=100)),
@@ -85,12 +83,12 @@ class ClothingItem(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name, allow_unicode=True)
         super().save(*args, **kwargs)
 
     def get_price_with_discount(self):
         if self.discount:
-            return round(self.price * (1 - (self.discount / 100)), 2)
+            return (self.price * (1 - self.discount / 100)).quantize(Decimal("0.01"))
         return round(self.price, 2)
 
 
@@ -115,7 +113,11 @@ class ItemImage(models.Model):
     product = models.ForeignKey(
         ClothingItem, on_delete=models.CASCADE, related_name="images"
     )
-    image = models.ImageField(upload_to="product/%Y/%m/%d", blank=True)
+    image = models.ImageField(upload_to="product/%Y/%m/%d")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order",]
 
     def __str__(self):
         return f"{self.product.name} - {self.image.name}"
