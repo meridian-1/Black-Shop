@@ -3,8 +3,8 @@
 {% block title %} Black Shop - Catalog {% endblock title %}
 
 {% block content %}
-<h1 class="rev-head text-uppercase" id="reverence-title">
-  Reverence interlude - ALL
+<h1 class="rev-head text-uppercase" id="shop-title">
+  Black Shop - ALL
 </h1>
 
 <div class="catalog d-flex">
@@ -13,6 +13,12 @@
     method="get"
     class="sidebar"
     id="filter-form"
+
+    hx-get="{{ url('main:catalog')}}"
+    hx-target="#catalog-results"
+    hx-swap="innerHTML"
+    hx-push-url="true"
+    hx-trigger="change from:input[type='checkbox'], keyup changed delay:700ms from:input[type='number']"
   >
     <h4 class="price-head">Price Range:</h4>
     <div class="price-range d-flex justify-content-between">
@@ -22,7 +28,6 @@
         id="min_price"
         placeholder="Min Price"
         value="{{ request.GET.get('min_price', '') }}"
-        oninput="debounceApplyFilters()"
       />
       <input
         type="number"
@@ -30,27 +35,18 @@
         id="max_price"
         placeholder="Max Price"
         value="{{ request.GET.get('max_price', '') }}"
-        oninput="debounceApplyFilters()"
       />
     </div>
-
     <h4 class="category-head">Category:</h4>
+
     {% for category in categories %}
     <div class="category-option">
-      <input
-        type="checkbox"
-        name="category"
+      <input type="checkbox" name="category"
         id="category-{{ category.slug }}"
-        value="{{ category.slug }}"
-        {%
-        if
-        category.slug
-        in
-        selected_categories
-        %}checked{%
-        endif
-        %}
-        onchange="applyFilters()"
+        value="{{ category.slug }}" 
+          {% if category.slug in selected_categories %}
+            checked
+          {% endif %} 
       />
       <label for="category-{{ category.slug }}" class="d-flex">
         <div class="category-name">{{ category.name }}</div>
@@ -60,6 +56,7 @@
     {% endfor %}
 
     <h4 class="size-head">Size:</h4>
+
     {% for size in sizes %}
     <div class="category-option">
       <input
@@ -67,15 +64,9 @@
         name="size"
         id="size-{{ size.name }}"
         value="{{ size.name }}"
-        {%
-        if
-        size.name
-        in
-        selected_sizes
-        %}checked{%
-        endif
-        %}
-        onchange="applyFilters()"
+          {% if size.name in selected_sizes %}
+            checked
+          {% endif %} 
       />
       <label for="size-{{ size.name }}">{{ size.name }}</label>
     </div>
@@ -83,92 +74,37 @@
   </form>
 
   <div class="product-list">
-    <div class="card-container d-flex flex-wrap">
-      {% for item in clothing_items %}
-      <div class="card">
-        <a
-          href="{{ url('main:clothing_item_detail', item.slug) }}"
-          class="card-on-catalog"
-        >
-          {% if item.image %}
-          <img
-            src="{{ item.image.url }}"
-            alt="{{ item.name }}"
-            class="product-image"
-          />
-          {% else %}
-          <img
-            src="{{ static('img/no-image.jpg') }}"
-            alt="{{ item.name }}"
-            class="product-image"
-          />
-          {% endif %}
-          <div class="card-info">
-            <h5>{{ item.name }}</h5>
-            {% if item.discount %}
-            <div class="cart-discount d-flex gap-2">
-              <p class="line price-on-card">${{ item.price }}</p>
-              <p class="price">
-                ${{ '%.2f' | format(item.get_price_with_discount()) }}
-              </p>
-            </div>
-            {% else %}
-            <p class="detail-price">${{ item.price }}</p>
-            {% endif %}
-          </div>
-        </a>
-      </div>
-      {% else %}
-      <p>No products.</p>
-      {% endfor %}
+    <div id="catalog-results">
+      {% include 'product/includes/card_results.html' %}
     </div>
   </div>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll(
-      '.category-option input[type="checkbox"]',
-    )
-    const form = document.getElementById('filter-form')
-    checkboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', function () {
-        form.submit()
-      })
-    })
-  })
-
-  let timeout
-  function debounceApplyFilters() {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      const form = document.getElementById('filter-form')
-      form.submit()
-    }, 1000)
-  }
-
-  function applyFilters() {
-    const form = document.getElementById('filter-form')
-    form.submit()
-    updateTitle()
-  }
-
   function updateTitle() {
-    const checkboxes = document.querySelectorAll(
-      'input[name="category"]:checked',
-    )
-    const titleElement = document.getElementById('reverence-title')
+    const checkboxes = document.querySelectorAll('input[name="category"]:checked')
+    const titleElement = document.getElementById('shop-title')
+
+    if (!titleElement) return
+
     if (checkboxes.length > 0) {
       const selectedCategories = Array.from(checkboxes).map((checkbox) => {
-        const categoryText = checkbox.nextElementSibling.textContent.trim()
-        return categoryText
+        const label = checkbox.closest('.category-option').querySelector('.category-name')
+        return label ? label.textContent.trim() : checkbox.value
       })
-      titleElement.textContent = `REVERENCE INTERLUDE - ${selectedCategories.join(', ')}`
+
+      titleElement.textContent = `Black Shop - ${selectedCategories.join(', ')}`
     } else {
-      titleElement.textContent = 'REVERENCE INTERLUDE - ALL'
+      titleElement.textContent = 'Black Shop - ALL'
     }
   }
 
   document.addEventListener('DOMContentLoaded', updateTitle)
+
+  document.body.addEventListener('htmx:afterRequest', function () {
+    updateTitle()
+  })
+
+  document.getElementById('filter-form')?.addEventListener('change', updateTitle)
 </script>
 {% endblock content %}

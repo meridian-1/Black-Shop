@@ -50,7 +50,10 @@ def catalog(request):
         "selected_sizes": selected_sizes,
     }
 
-    return render(request, "product/list.html", context)
+    if request.headers.get("HX-Request"):
+        return render(request, "product/includes/card_results.html", context)
+
+    return render(request, "product/list.html", context, using="jinja2")
 
 
 def clothing_item_detail(request, slug):
