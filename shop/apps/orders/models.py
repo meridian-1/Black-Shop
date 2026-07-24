@@ -49,10 +49,8 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
-    clothing_item = models.ForeignKey(
-        ClothingItem, on_delete=models.PROTECT, related_name="order_itemss"
-    )
-    size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name="order_size")
+    clothing_item = models.ForeignKey(ClothingItem, on_delete=models.PROTECT)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(Decimal("1"))])
     price = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))]
