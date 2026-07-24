@@ -67,3 +67,18 @@ class RegisterUserForm(UserCreationForm):
             }
         )
         self.fields["password2"].label = _("Подтверждение пароля")
+
+
+class ProfileUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "middle_name",
+            "city",
+            "street",
+            "house_number",
+            "apartment_number",
+            "postal_code",
+        ]

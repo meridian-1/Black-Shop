@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Black SHop - Profile
+{% endblock title %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Shop - Profile</title>
+</head>
+<body>
+    <h1 class="text-center mb-5">Orders history</h1>
+    <div class="profile d-flex flex-column gap-4 justify-content-center">
+        <div class="profile-history">
+            <div class="table-head d-flex justify-content-between align-items-center">
+                <div class="left-side-head">
+                    <p class="table-p">Product</p>
+                </div>
+                <div class="right-side-head d-flex gap-3">
+                    <p class="table-p c-item-total">Price</p>
+                    <p class="table-p c-item-quantity">Quantity</p>
+                    <p class="table-p c-item-price">Total</p>
+                </div>
+            </div>
+            <div class="table-items">
+                {% if orders %}
+                    {% for order in orders  %}
+                        <div class="order">
+                            Order Number - {{ order.id }}
+                            {% for item in order.items.all %}
+                                <div class="order-item d-flex justify-content-between align-items-center">
+                                    <div class="left-side-items d-flex">
+                                        <div class="c-item-img">
+                                            <img src="{{ item.clothing_item.image.url }}" alt="Product Image">
+                                        </div>
+                                        <div class="c-item-info">
+                                            <a href="$" class="item-name-in-cart p-3">{{ item.clothing_item.name }}</a>
+                                            <p class="item-size-bottom fw-bold p-3">Size {{ item.size }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="right-side-items d-flex gap-3">
+                                        <div class="c-item-price">
+                                            $price
+                                        </div>
+                                        <div class="c-item-quantity">
+                                            1
+                                        </div>
+                                        <div class="c-item-total">
+                                            $29.99
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="track mt-2">Tracking number: {{ order.tracking_number }}</div> 
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-orders-message text-center">
+                        <h3 class="mt-5">You have no orders.</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-info">
+    <h3 class="mb-5 mt-5">Ordering data</h3>
+    <form method="post" class="profile-form">
+        {{ csrf_input }}
+        <div class="form-blocks d-flex gap-4">
+            <div class="block1 d-flex flex-column gap-1">
+                {{ form.first_name.label_tag() }} {{ form.first_name }} <br>
+                {{ form.last_name.label_tag() }} {{ form.last_name }} <br>
+                {{ form.middle_name.label_tag() }} {{ form.middle_name }} <br>
+                {{ form.city.label_tag() }} {{ form.city }} <br>
+                {{ form.street.label_tag() }} {{ form.street }} <br>
+                {{ form.house_number.label_tag() }} {{ form.house_number }} <br>
+            </div>
+            <div class="block2 d-flex flex-column gap-1">
+                {{ form.apartment_number.label_tag() }} {{ form.apartment_number }} <br>
+                {{ form.postal_code.label_tag() }} {{ form.postal_code }} <br>
+                <div class="p-on-order d-flex flex-column justify-content-center align-items-center">
+                    <p class="block-tag mt-4 text-center">The information will be used when placing an order.</p>
+                </div>
+            </div>
+        </div>
+        <div class="profile-buttons mt-4 d-flex justify-content-between">
+            <button type='submit' class="default-btn profile-btn">Save</button>
+            <button type='submit' form="logout-form" class="logout-btn d-flex align-it">Log out of your account</button>
+        </div>
+    </form>
+    <form action="{{ url('users:logout') }}" method="post" id="logout-form" >
+        {{ csrf_input }}
+    </form>
+</div>
+</body>
+</html>
+{% endblock content %}
+    
