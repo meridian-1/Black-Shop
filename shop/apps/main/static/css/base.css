@@ -406,3 +406,12 @@ input:focus {
 .price-on-card {
     padding-top: 5px;
 }
+
+.prev-btn, .next-btn {
+    background-color: #00000060;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 10px;
+    color: #fff;
+}

@@ -1,4 +1,5 @@
 from decimal import Decimal, InvalidOperation
+from urllib.request import Request
 
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
@@ -63,7 +64,7 @@ def clothing_item_detail(request, slug):
     )
 
     available_sizes = (
-        ClothingItemSize.objects.filter(quantity__gt=0)
+        ClothingItemSize.objects.filter(clothing_item=clothing_item, quantity__gt=0)
         .select_related("size")
         .order_by("size__order", "size__name")
     )
