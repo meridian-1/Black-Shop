@@ -116,3 +116,5 @@ AUTH_USER_MODEL = "users.User"
 
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+CART_SESSION_ID = "cart"
