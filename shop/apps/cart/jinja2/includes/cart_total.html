@@ -1,0 +1,10 @@
+{% if cart %}
+    <div id="cart-total-block" hx-swap-oob="true">
+        <h3 class="total_price_cart mt-5">
+            Total price: ${{ cart.get_total_price() }}
+        </h3>
+        <a href="#" class="default-btn mt-3">Create order</a>
+    </div>
+{% else %}
+    <div id="cart-total-block" hx-swap-oob="true"></div>
+{% endif %}

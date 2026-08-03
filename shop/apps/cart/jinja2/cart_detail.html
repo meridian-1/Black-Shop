@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-center mb-5">Shopping Cart</h1>
+
+<div class="table-cart">
+    <div class="table-head d-flex justify-content-between align-items-center">
+        <div class="left-side-head">
+            <p class="table-p">Product</p>
+        </div>
+        <div class="right-side-head d-flex gap-3">
+            <p class="table-p c-item-total">Price</p>
+            <p class="table-p c-item-quantity">Quantity</p>
+            <p class="table-p c-item-price">Total</p>
+        </div>
+    </div>
+
+    <div class="table-items">
+        {% if not cart %}
+            <div class="empty-cart-message d-flex flex-column justify-content-center align-items-center text-center">
+                <h3 class="mt-5 mb-5">Your cart is empty.</h3>
+                <a href="{{ url('main:catalog') }}" class="default-btn">Product list</a>
+            </div>
+        {% else %}
+            {% for row in cart %}
+                <div class="c-item-row cart-item d-flex justify-content-between align-items-center"
+                    id="cart-item-{{ row.item.id }}-{{ row.size }}">
+                    <div class="left-side-items d-flex">
+                        <div class="c-item-img">
+                            {% if row.item.image %}
+                                <img src="{{ row.item.image.url }}" alt="{{ row.item.name }}">
+                            {% else %}
+                                <img src="{{ static('images/no-image.jpg') }}" alt="No image">
+                            {% endif %}
+                        </div>
+                        <div class="c-item-info">
+                            <a href="#" class="item-name-in-cart p-3">
+                                {{ row.item.name }}
+                            </a>
+                            <p class="item-size-bottom fw-bold p-3">Size: {{ row.size }}</p>
+                        </div>
+                    </div>
+
+                    <div class="right-side-items d-flex gap-3">
+                        <div class="c-item-price">
+                            ${{ row.price }}
+                        </div>
+
+                        <div class="c-item-quantity">
+                            <form action="#"
+                                id="update-form-{{ row.item.id }}-{{ row.size }}"
+                                method="post"
+                                class="c-quantity-form">
+                                {{ csrf_input }}
+                                <input type="number"
+                                    class="text-center"
+                                    name="quantity"
+                                    value="{{ row.quantity }}"
+                                    min="1"
+                                    required
+                                    id="quantity-{{ row.item.id }}-{{ row.size }}"
+                                    oninput="updateCart('{{ row.item.id }}-{{ row.size }}')">
+                            </form>
+
+                            <form hx-post="{{ url('cart:cart_remove', row.item.id, row.size) }}"
+                                hx-target="#cart-item-{{ row.item.id }}-{{ row.size }}"
+                                hx-swap="delete"
+                                style="display:inline;">
+                                {{ csrf_input }}
+                                <button type="submit" class="btn btn-link p-0">Remove</button>
+                            </form>
+                        </div>
+
+                        <div class="c-item-total">
+                            ${{ row.total_price }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% if cart %}
+    <div id="cart-total-block">
+        <h3 class="total_price_cart mt-5">
+            Total price: ${{ cart.get_total_price() }}
+        </h3>
+        <a href="#" class="default-btn mt-3">Create order</a>
+    </div>
+{% endif %}
+
+<script>
+    let timeout = null;
+    function updateCart(itemKey) {
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            document.getElementById('update-form-' + itemKey).submit();
+        }, 1000);
+    }
+</script>
+{% endblock %}

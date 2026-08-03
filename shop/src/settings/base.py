@@ -19,7 +19,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = ["django_htmx"]
 
-LOCAL_APPS = ["apps.main", "apps.users", "apps.orders"]
+LOCAL_APPS = ["apps.main", "apps.users", "apps.cart", "apps.orders"]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -116,3 +116,5 @@ AUTH_USER_MODEL = "users.User"
 
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+CART_SESSION_ID = "cart"

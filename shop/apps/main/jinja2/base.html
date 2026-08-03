@@ -33,8 +33,9 @@
         <a href="{{ url('users:profile') }}" class="h-profile" aria-label="Профиль">
           <img src="{{ static('img/profile.png') }}" alt="" />
         </a>
-        <a href="#" class="h-profile">
+        <a href="{{ url('cart:cart_detail') }}" class="h-profile">
           <img src="{{ static('img/cart.png') }}" alt="" />
+          <span id="cart-count">3</span>
         </a>
         <div class="forsearch">
           <a href="#" id="toggle-search" class="toggle-search">

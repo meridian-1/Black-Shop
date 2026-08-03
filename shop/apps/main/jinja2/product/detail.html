@@ -32,7 +32,7 @@
                                 {{ item_size.size.name }}
                             </li>
                         {% else %}
-                            <li>No available sizes. Sold Out</li>
+                            <li>Sold Out</li>
                         {% endfor %}
                     </ul>
                 </p>
@@ -47,19 +47,32 @@
                     ${{ clothing_item.price }}
                 </p>
             {% endif %}
-            <div class="detail-cart-form">
-                <form action="#" method="post">
-                    {{ csrf_input }}
-                    <div class="select-size d-flex gap-2">
-                        <label for="size">Size:</label>
-                        <div id="size-display">
-                            unselected
+            
+            
+            {% if available_sizes %}
+                <div class="detail-cart-form">
+                    <form 
+                    hx-post="{{ url('cart:cart_add', clothing_item.id) }}" 
+                    hx-swap="none"
+                    method="post">
+                        {{ csrf_input }}
+                        <div class="select-size d-flex gap-2">
+                            <label for="size">Size:</label>
+                            <div id="size-display">
+                                unselected
+                            </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="size" id="size" required>
-                    <button type="submit" class="default-btn mt-3">Add to cart</button>
-                </form>
-            </div>
+                        <input type="hidden" name="size" id="size" required>
+
+                        <div class="select-quantity d-flex gap-2 mt-2">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity"
+                                value="1" min="1" class="quantity-input">
+                        </div>
+                        <button type="submit" class="default-btn mt-3">Add to cart</button>
+                    </form>
+                </div>
+            {% endif %}
         </div>
     </div>
 

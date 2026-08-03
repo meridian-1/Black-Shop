@@ -2,14 +2,15 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
-from schema_graph.views import Schema 
+from schema_graph.views import Schema
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("apps.main.urls")),
+    path("cart/", include("apps.cart.urls")),
     # path("orders/", include("apps.orders.urls")),
     path("users/", include("apps.users.urls")),
     path("schema/", Schema.as_view(), name="schema"),
+    path("", include("apps.main.urls")),
 ]
 
 if settings.DEBUG:
