@@ -1,7 +1,9 @@
 from decimal import Decimal, InvalidOperation
 
+from django.db.models import Q
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
+
 
 from .models import Category, ClothingItem, Size, ClothingItemSize
 
@@ -23,6 +25,15 @@ def catalog(request):
         "sizes"
     )
 
+    ## === Search ===
+    search_query = request.GET.get("q", "").strip()
+    if search_query:
+        clothing_items = clothing_items.filter(
+            Q(name__icontains=search_query) | Q(description__icontains=search_query)
+        )
+    
+
+    ## === Filters ===
     selected_categories = request.GET.getlist("category")
     if selected_categories:
         clothing_items = clothing_items.filter(category__slug__in=selected_categories)
@@ -47,6 +58,7 @@ def catalog(request):
         "clothing_items": clothing_items,
         "selected_categories": selected_categories,
         "selected_sizes": selected_sizes,
+        "search_query": search_query,
     }
 
     if request.headers.get("HX-Request"):
