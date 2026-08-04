@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Black Shop{% endblock title %}</title>
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="{{ static('bootstrap/css/bootstrap.min.css') }}"
-    />
+    <link rel="stylesheet" href="{{ static('bootstrap/css/bootstrap.min.css') }}"/>
     <link rel="stylesheet" href="{{ static('css/base.css') }}" />
+    <link rel="icon" type="image/png" href="{{ static('favicon.png') }}">
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header class="header sticky-top d-flex align-items-center">
@@ -35,7 +33,6 @@
         </a>
         <a href="{{ url('cart:cart_detail') }}" class="h-profile">
           <img src="{{ static('img/cart.png') }}" alt="" />
-          <span id="cart-count">3</span>
         </a>
         <div class="forsearch">
           <a href="#" id="toggle-search" class="toggle-search">

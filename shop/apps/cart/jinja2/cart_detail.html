@@ -47,12 +47,13 @@
                         </div>
 
                         <div class="c-item-quantity">
-                            <form action="#"
+                            <form action="{{ url('cart:cart_update', row.item.id, row.size) }}"
                                 id="update-form-{{ row.item.id }}-{{ row.size }}"
                                 method="post"
                                 class="c-quantity-form">
                                 {{ csrf_input }}
-                                <input type="number"
+                                <input 
+                                    type="number"
                                     class="text-center"
                                     name="quantity"
                                     value="{{ row.quantity }}"
