@@ -1,6 +1,5 @@
 from .base import *
 
-
 DEBUG = env.bool("DEBUG", default=False)
 
 SECRET_KEY = env("SECRET_KEY")
@@ -8,12 +7,7 @@ SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {"default": env.db("DATABASE_URL")}
 
 # Static files
 STATIC_URL = env("STATIC_URL")
